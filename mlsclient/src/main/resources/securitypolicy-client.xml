@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xwss:SecurityConfiguration dumpMessages="true"
+	xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+
+	<xwss:Timestamp />
+	<!-- Sign request with private key alias -->
+	<xwss:Sign includeTimestamp="false">
+		<xwss:X509Token certificateAlias="mlskey"
+			keyReferenceType="IssuerSerialNumber" />
+
+		<xwss:SignatureTarget type="xpath"
+			value="/SOAP-ENV:Envelope/SOAP-ENV:Header/wsse:Security/wsu:Timestamp">
+			<xwss:DigestMethod algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+			<xwss:Transform algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+				<xwss:AlgorithmParameter name="CanonicalizationMethod"
+					value="http://www.w3.org/2001/10/xml-exc-c14n#" />
+			</xwss:Transform>
+		</xwss:SignatureTarget>
+
+		<xwss:SignatureTarget type="xpath"
+			value="/SOAP-ENV:Envelope/SOAP-ENV:Body">
+			<xwss:DigestMethod algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+			<xwss:Transform algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+				<xwss:AlgorithmParameter name="CanonicalizationMethod"
+					value="http://www.w3.org/2001/10/xml-exc-c14n#" />
+			</xwss:Transform>
+		</xwss:SignatureTarget>
+	</xwss:Sign>
+
+	<!-- Encrypt request with public key -->
+	<xwss:Encrypt>
+		<xwss:X509Token certificateAlias="cakey"
+			keyReferenceType="IssuerSerialNumber" />
+		<xwss:DataEncryptionMethod
+			algorithm="http://www.w3.org/2001/04/xmlenc#aes128-cbc" />
+	</xwss:Encrypt>
+
+	<!--xwss:RequireSignature> <xwss:SignatureTarget type="xpath" value="/soap-env:Envelope/soap-env:Body"/> 
+		</xwss:RequireSignature -->
+
+</xwss:SecurityConfiguration>

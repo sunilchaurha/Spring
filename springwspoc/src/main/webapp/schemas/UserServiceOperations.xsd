@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://com/samples/webservices/userService" xmlns:user="http://webservices.samples.com" targetNamespace="http://com/samples/webservices/userService" elementFormDefault="qualified">
+	<xsd:import namespace="http://webservices.samples.com" schemaLocation="User.xsd"/>
+	<xsd:element name="GetUserRequest">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="username" type="xsd:string"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="GetUserResponse">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="UserDetail" type="user:User"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>

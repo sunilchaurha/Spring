@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:sws="http://www.springframework.org/schema/web-services" xmlns:s="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/web-services
+http://www.springframework.org/schema/web-services/web-services.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context.xsd
+http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd">
+
+
+	<sws:annotation-driven />
+	<context:component-scan base-package="com.springws" />
+	<context:property-placeholder location="classpath:mlskeys.properties" />
+
+	<bean id="keyStoreHandler"
+		class="org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler">
+		<property name="keyStore" ref="keyStore" />
+		<property name="trustStore" ref="trustStore" />
+		<property name="privateKeyPassword" value="${mls.ws.keystore.pass}" />
+	</bean>
+
+	<bean id="keyStore"
+		class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+		<property name="location" value="${mls.ws.keystore.path}" />
+		<property name="type" value="jks" />
+		<property name="password" value="${mls.ws.keystore.pass}" />
+	</bean>
+
+	<bean id="trustStore"
+		class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+		<property name="location" value="${mls.ws.keystore.path}" />
+		<property name="password" value="${mls.ws.keystore.pass}" />
+	</bean>
+
+	<sws:static-wsdl location="wsdl/userService.wsdl" />
+
+	<sws:interceptors>
+		<bean class="com.springws.wssecurity.XwsSecirityInterceptorCustom">
+			<property name="policyConfiguration" value="classpath:securitypolicy.xml" />
+			<property name="callbackHandlers">
+				<list>
+					<ref bean="keyStoreHandler" />
+				</list>
+			</property>
+		</bean>
+	</sws:interceptors>
+
+</beans>

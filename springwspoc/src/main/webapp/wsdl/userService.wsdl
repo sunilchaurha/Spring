@@ -1,0 +1,59 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch0="http://com/samples/webservices/userService" xmlns:sch1="http://webservices.samples.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://com/samples/webservices/userService" targetNamespace="http://com/samples/webservices/userService">
+<wsdl:types xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://com/samples/webservices/userService" xmlns:user="http://webservices.samples.com" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://com/samples/webservices/userService">
+<xsd:import xmlns:xsd="http://www.w3.org/2001/XMLSchema" namespace="http://webservices.samples.com"/>
+<xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="GetUserRequest">
+<xsd:complexType xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:sequence xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="username" type="xsd:string"/>
+</xsd:sequence>
+</xsd:complexType>
+</xsd:element>
+<xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="GetUserResponse">
+<xsd:complexType xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:sequence xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="UserDetail" type="user:User"/>
+</xsd:sequence>
+</xsd:complexType>
+</xsd:element>
+</xsd:schema>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://webservices.samples.com" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://webservices.samples.com">
+<xs:element xmlns:xs="http://www.w3.org/2001/XMLSchema" name="User" type="User"/>
+<xs:complexType xmlns:xs="http://www.w3.org/2001/XMLSchema" name="User">
+<xs:sequence xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element xmlns:xs="http://www.w3.org/2001/XMLSchema" name="username" type="xs:string"/>
+<xs:element xmlns:xs="http://www.w3.org/2001/XMLSchema" name="email" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
+</wsdl:types>
+<wsdl:message xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="GetUserRequest">
+<wsdl:part xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" element="tns:GetUserRequest" name="GetUserRequest"></wsdl:part>
+</wsdl:message>
+<wsdl:message xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="GetUserResponse">
+<wsdl:part xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" element="tns:GetUserResponse" name="GetUserResponse"></wsdl:part>
+</wsdl:message>
+<wsdl:portType xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="userService">
+<wsdl:operation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="GetUser">
+<wsdl:input xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" message="tns:GetUserRequest" name="GetUserRequest"></wsdl:input>
+<wsdl:output xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" message="tns:GetUserResponse" name="GetUserResponse"></wsdl:output>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="userServiceSoap11" type="tns:userService">
+<soap:binding xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="GetUser">
+<soap:operation xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" soapAction=""/>
+<wsdl:input xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="GetUserRequest">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" use="literal"/>
+</wsdl:input>
+<wsdl:output xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="GetUserResponse">
+<soap:body xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="userService">
+<wsdl:port xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" binding="tns:userServiceSoap11" name="userServiceSoap11">
+<soap:address xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" location="http://localhost:8090/springwspoc/endpoints"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>

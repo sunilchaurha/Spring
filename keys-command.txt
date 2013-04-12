@@ -1,0 +1,7 @@
+######### Simple commands which can be used to create self signed certificates on DOS command prompe using keytool java utility ########################
+
+keytool -genkey -noprompt -trustcacerts -alias mlskey{alias name} -keyalg RSA{algorithm name} -keystore mlskey.jks{keystore file name}
+
+keytool -export -alias mlskey{alias name} -storepass changeit{keystore password} -file server.cer{certificate name} -keystore mlskey.jks{keystore file}
+
+keytool -import -v -trustcacerts -alias cakey{public key alias} -file server.cer{certificate name} -keystore cacerts.jks{public keystore name} -keypass changeit{password}

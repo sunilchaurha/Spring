@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:int-ws="http://www.springframework.org/schema/integration/ws"
+	xsi:schemaLocation="http://www.springframework.org/schema/integration/ws http://www.springframework.org/schema/integration/ws/spring-integration-ws.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+	<context:property-placeholder location="classpath:mlswsclient.properties"/>
+	
+	<bean id="keyStoreHandler"
+		class="org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler">
+		<property name="trustStore" ref="trustStore"/>
+		<property name="keyStore" ref="keyStore" />
+		<property name="privateKeyPassword" value="${mls.ws.keystore.pass}" />
+	</bean>
+	
+	<bean id="trustStore" class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+		<property name="location" value="${mls.ws.truststore.path}" />
+		<property name="password" value="${mls.ws.truststore.pass}" />
+	</bean>
+	
+	<bean id="keyStore"
+		class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+		<property name="location" value="${mls.ws.keystore.path}" />
+		<property name="password" value="${mls.ws.keystore.pass}" />
+	</bean>
+	
+	<bean id="wsSecurityInterceptor"
+		class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor">
+		<property name="policyConfiguration" value="classpath:securitypolicy-client.xml" />
+		<property name="callbackHandlers">
+			<list>
+				<ref bean="keyStoreHandler" />
+			</list>
+		</property>
+	</bean>
+	
+	<int:channel id="ws.mls.invoker.channel" />
+	<int:channel id="ws.mls.request.channel" />
+	<int:channel id="ws.mls.reply.channel" />
+	<int:channel id="ws.mls.output.channel">	
+		<int:queue />
+	</int:channel>
+	<int:bridge input-channel="ws.mls.invoker.channel" output-channel="ws.mls.request.channel" />
+	
+	<int:chain input-channel="ws.mls.request.channel" output-channel="ws.mls.reply.channel" >
+		<int-ws:header-enricher>
+            <int-ws:soap-action value="${mls.ws.soapaction}" />
+        </int-ws:header-enricher>
+		
+		<int-ws:outbound-gateway id="ws.caller.gateway" 
+			ignore-empty-responses="true" interceptor="wsSecurityInterceptor"  
+			uri="http://localhost:8090/springwspoc/endpoints/userService.wsdl"  >
+		</int-ws:outbound-gateway>
+			
+	</int:chain>
+	
+	<int:bridge input-channel="ws.mls.reply.channel" output-channel="ws.mls.output.channel" />
+	
+	
+</beans>

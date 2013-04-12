@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:GetUserRequest xmlns:p="http://com/samples/webservices/userService" xmlns:p1="http://webservices.samples.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://com/samples/webservices/userService UserServiceOperations.xsd ">
+  <p:username>p:username</p:username>
+</p:GetUserRequest>
